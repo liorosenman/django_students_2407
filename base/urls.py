@@ -8,5 +8,8 @@ urlpatterns = [
     path('login/', views.TokenObtainPairView.as_view, name='token_obtain_pair'),
     path('get_all_images', views.getImages),
     path('upload_image/', views.APIViews.as_view),
-    # path('get_products/', views.myProducts )
+    path('get_students/', views.get_students),
+    path('create_student/', views.create_student),
+    # path('login/', views.login)
+
 ]
