@@ -7,10 +7,28 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        return token
+    
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getNotes(request):
+	return "I am protected"
+
 
 def index(req):
     return JsonResponse('hello', safe=False)
@@ -18,7 +36,7 @@ def index(req):
 @api_view(['GET'])
 def getImages(request):
     res=[] #create an empty list
-    for img in Product.objects.all(): #run on every row in the table...
+    for img in Student.objects.all(): #run on every row in the table...
         res.append({"title":img.title,
                 "description":img.description,
                 "completed":False,
@@ -39,6 +57,8 @@ def create_student(request):
         return Response({'message':'Student created successfully'})
     else:
         return Response(stud_serializer.errors)
+    
+
     
 # @api_view(['POST'])
 # def login(request):
