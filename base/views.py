@@ -58,6 +58,35 @@ def create_student(request):
     else:
         return Response(stud_serializer.errors)
     
+@api_view(['PUT', 'PATCH'])
+def update_student(request, id):
+    try:
+        student = Student.objects.get(id=id)
+    except Student.DoesNotExist:
+        return Response({"error": "not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'PUT':
+        serializer = StudentSerializer(student, data=request.data)
+    elif request.method == 'PATCH':
+        serializer = StudentSerializer(student, data=request.data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "updated successfully"}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# @api_view(['PUT', 'PATCH'])
+# def update_student(request, id):
+#     try:
+#         student = Student.objects.get(id=id)
+#     except Student.DoesNotExist:
+#         return Response ("not found")
+#     ser = StudentSerializer(data = request.data)
+#     old_stud = Student.objects.get(id=id)
+#     ser.update(old_stud, request.data)
+#     return Response('updated successfully')
+    
 
     
 # @api_view(['POST'])

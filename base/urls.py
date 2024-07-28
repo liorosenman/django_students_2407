@@ -11,6 +11,7 @@ urlpatterns = [
     path('upload_image/', views.APIViews.as_view),
     path('get_students/', views.get_students),
     path('create_student/', views.create_student),
+    path('upd_student/<int:id>/', views.update_student)
     # path('login/', views.login)
 
 ]
